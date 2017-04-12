@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Models\Driver;
 use App\Http\Controllers\Controller;
 use DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class DriverController extends Controller
 {
@@ -45,45 +46,51 @@ class DriverController extends Controller
      */
     public function store(Request $request)
     {
-        try {
+        $users = JWTAuth::parseToken()->toUser();
+        if ($users['original']['tinyintIdentifier'] == 1){
+            try {
 
-            $existingDriver = DB::table('tblDriver')
-                ->select('intDriverID')
-                ->where('strDriverLicense', $request->strDriverLicense)
-                ->first();
+                $existingDriver = DB::table('tblDriver')
+                    ->select('intDriverID')
+                    ->where('strDriverLicense', $request->strDriverLicense)
+                    ->first();
 
-            if (is_null($existingDriver)){
-                $driver = new Driver;
+                if (is_null($existingDriver)){
+                    $driver = new Driver;
 
-                $driver->strDriverLicense = $request->strDriverLicense;
-                $driver->strDriverFirstName = $request->strDriverFirstName;
-                $driver->strDriverMiddleName = $request->strDriverMiddleName;
-                $driver->strDriverLastName = $request->strDriverLastName;
-                $driver->intLicenseType = $request->intLicenseType;
-                $driver->datLicenseExpiration = $request->datLicenseExpiration;
-                $driver->datDriverBirthday = $request->datDriverBirthday;
+                    $driver->strDriverLicense = $request->strDriverLicense;
+                    $driver->strDriverFirstName = $request->strDriverFirstName;
+                    $driver->strDriverMiddleName = $request->strDriverMiddleName;
+                    $driver->strDriverLastName = $request->strDriverLastName;
+                    $driver->intLicenseType = $request->intLicenseType;
+                    $driver->datLicenseExpiration = $request->datLicenseExpiration;
+                    $driver->datDriverBirthday = $request->datDriverBirthday;
 
-                $driver->save();
+                    $driver->save();
 
+                    return response()->json([
+                        'message' => 'Driver Added',
+                        'status code' => 201
+                    ]);
+                }else{
+                    return response()->json([
+                        'message' => 'Driver Exists.'
+                    ]);
+                }
+
+                    
+            } catch (Exception $e) {
                 return response()->json([
-                    'message' => 'Driver Added',
-                    'status code' => 201
-                ]);
-            }else{
-                return response()->json([
-                    'message' => 'Driver Exists.'
+                    'message' => $e.getMessage(),
+                    'status code' => 404
                 ]);
             }
-
-                
-        } catch (Exception $e) {
+        } else{
             return response()->json([
-                'message' => $e.getMessage(),
-                'status code' => 404
+                'message' => 'Unauthorized.',
+                'status Code' => 401
             ]);
         }
-        
-
 
     }
 

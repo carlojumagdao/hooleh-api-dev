@@ -27,11 +27,13 @@ Route::get('/enforcer', function () {
     return view('enforcer');
 });
 
-Route::group(['middleware' => 'cors'], function(){
-	Route::resource('/api/v1/enforcers','api\v1\EnforcerController');
+Route::post('authenticate', 'Auth\AuthController@authenticate');
+
+Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api/v1'], function () {
+	Route::resource('enforcers','api\v1\EnforcerController');
+	Route::resource('drivers', 'api\v1\DriverController');	
+	Route::resource('violations', 'api\v1\ViolationController');
+	Route::resource('driverviolations', 'api\v1\DriverViolationController');
 });
 
-
-Route::resource('/api/v1/drivers', 'api\v1\DriverController');	
-Route::resource('/api/v1/violations', 'api\v1\ViolationController');
-Route::resource('/api/v1/driverviolations', 'api\v1\DriverViolationController');
+	
