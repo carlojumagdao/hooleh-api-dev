@@ -8,6 +8,8 @@ use Hash;
 use App\Models\Enforcer;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use DB;
 
 class EnforcerController extends Controller
 {
@@ -18,11 +20,21 @@ class EnforcerController extends Controller
      */
     public function index()
     {
-        $enforcers = Enforcer::where('blEnforcerDelete', 0)
-            ->orderBy('strEnforcerLastname', 'asc')
-            ->get();
 
-        return response()->json($enforcers);
+        $user = JWTAuth::parseToken()->toUser();
+        if ($user['original']['tinyintIdentifier'] == 1){
+            $enforcers = Enforcer::where('blEnforcerDelete', 0)
+                ->orderBy('strEnforcerLastname', 'asc')
+                ->get();
+
+            return response()->json($enforcers);
+        } else{
+            return response()->json([
+                'message' => 'Unauthorized.',
+                'status Code' => 401
+            ]);
+        }
+            
     }
 
     /**
@@ -43,35 +55,49 @@ class EnforcerController extends Controller
      */
     public function store(Request $request)
     {
-        try {
 
+        $user = JWTAuth::parseToken()->toUser();
+        if ($user['original']['tinyintIdentifier'] == 1){
             $enforcer = new Enforcer;
+            try {
+                DB::beginTransaction();
+                $userID = DB::table('users')->insertGetId([
+                    'username' => $request->username,
+                    'password' => Hash::make($request->password),
+                    'tinyintIdentifier' => 0
+                ]);
 
-            $enforcer->strEnforcerIdNumber = $request->strEnforcerIdNumber;
-            $enforcer->strEnforcerFirstname = $request->strEnforcerFirstname;
-            $enforcer->strEnforcerMiddlename = $request->strEnforcerMiddlename;
-            $enforcer->strEnforcerLastname = $request->strEnforcerLastname;
-            $enforcer->strEnforcerPicture = $request->strEnforcerPicture;
-            $enforcer->strEnforcerPosition = $request->strEnforcerPosition;
-            $enforcer->strEnforcerUsername = $request->strEnforcerUsername;
-            $enforcer->strEnforcerPassword = Hash::make($request->strEnforcerPassword);
-
-            $enforcer->save();
-
+                $enforcer->strEnforcerIdNumber = $request->strEnforcerIdNumber;
+                $enforcer->strEnforcerFirstname = $request->strEnforcerFirstname;
+                $enforcer->strEnforcerMiddlename = $request->strEnforcerMiddlename;
+                $enforcer->strEnforcerLastname = $request->strEnforcerLastname;
+                $enforcer->strEnforcerPicture = $request->strEnforcerPicture;
+                $enforcer->strEnforcerPosition = $request->strEnforcerPosition;
+                $enforcer->intUserID = $userID;
+                $enforcer->save();
+                DB::commit();
+                return response()->json([
+                        'message' => 'Enforcer Created.',
+                        'status code' => 201, 
+                        'data' => $enforcer
+                    ]
+                );
+            } catch (\Illuminate\Database\QueryException $e) {
+                DB::rollback();
+                return response()->json([
+                        'message' => $e->getMessage(),
+                        'status code' => 400,
+                        'data' => $enforcer
+                    ]
+                );
+            }
+        } else{
             return response()->json([
-                    'message' => 'Enforcer Created.',
-                    'status code' => 201, 
-                    'data' => $enforcer
-                ]
-            );
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json([
-                    'message' => $e->getMessage(),
-                    'status code' => 400,
-                    'data' => $enforcer
-                ]
-            );
+                'message' => 'Unauthorized.',
+                'status Code' => 401
+            ]);
         }
+            
             
     }
 
