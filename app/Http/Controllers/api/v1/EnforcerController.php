@@ -10,6 +10,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use DB;
+use App\User;
 
 class EnforcerController extends Controller
 {
@@ -96,9 +97,7 @@ class EnforcerController extends Controller
                 'message' => 'Unauthorized.',
                 'status Code' => 401
             ]);
-        }
-            
-            
+        } 
     }
 
     /**
@@ -181,5 +180,10 @@ class EnforcerController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function enforcerCurrentLogin(){
+        $user = JWTAuth::parseToken()->toUser();
+        return response()->json($user->Enforcer);
     }
 }

@@ -27,13 +27,15 @@ Route::get('/enforcer', function () {
     return view('enforcer');
 });
 
-Route::post('authenticate', 'Auth\AuthController@authenticate');
+Route::post('api/authenticate', 'Auth\AuthController@authenticate');
 
-Route::group(['middleware' => ['jwt.auth', 'cors'], 'prefix' => 'api/v1'], function () {
-	Route::resource('enforcers','api\v1\EnforcerController');
-	Route::resource('drivers', 'api\v1\DriverController');	
-	Route::resource('violations', 'api\v1\ViolationController');
-	Route::resource('driverviolations', 'api\v1\DriverViolationController');
+Route::group(['middleware' => ['jwt.auth', 'cors'], 'prefix' => 'api/v1', 'namespace' => 'api\v1'], function () {
+	Route::resource('enforcers','EnforcerController');
+	Route::resource('drivers', 'DriverController');	
+	Route::resource('violations', 'ViolationController');
+	Route::resource('driverviolations', 'DriverViolationController');
+
+	Route::get('enforcercurrentlogin', 'EnforcerController@enforcerCurrentLogin');
 });
 
 	
