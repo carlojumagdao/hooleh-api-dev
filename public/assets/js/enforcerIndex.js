@@ -101,7 +101,18 @@ $('#form').validator().on('submit', function (e) {
 })
 
 $("#btnCreateAnotherEnforcer").click(function(){
-    $(".addEnforcer" ).click();
+    $('#modalSuccessfulCreation').modal('hide');
+    var passwordGenerated = randomString(7);
+    $("#form").validator('update');
+    $("#formErrorMessage").hide();
+    $("#inputPassword").val(passwordGenerated);
+    $("#inputReEnterPassword").val(passwordGenerated);
+    $("#inputFirstname").val("");
+    $("#inputLastname").val("");
+    $("#inputEnforcerID").val("");
+    $(".passwordCredential").hide();
+    $("#setPasswordBlock").show();
+    $('#modalAddEnforcer').modal('show');
 });
 
 
