@@ -19,13 +19,22 @@ class DriverController extends Controller
      */
     public function index()
     {
-        $drivers = DB::table('tblDriver')
-            ->join('tblLicenseType', 'tblDriver.intLicenseType', '=', 'tblLicenseType.intLicenseId')
-            ->select('tblDriver.*', 'tblLicenseType.strLicenseType')
-            ->orderBy('tblDriver.strDriverLastName', 'asc')
-            ->get();
+        $users = JWTAuth::parseToken()->toUser();
+        if ($users['original']['tinyintIdentifier'] == 1){
+            $drivers = DB::table('tblDriver')
+                ->join('tblLicenseType', 'tblDriver.intLicenseType', '=', 'tblLicenseType.intLicenseId')
+                ->select('tblDriver.*', 'tblLicenseType.strLicenseType')
+                ->orderBy('tblDriver.strDriverLastName', 'asc')
+                ->get();
 
-        return response()->json($drivers);
+            return response()->json($drivers);
+        } else{
+            return response()->json([
+                'message' => 'Unauthorized.',
+                'status Code' => 401
+            ]);
+        }
+            
     }
 
     /**
@@ -105,7 +114,7 @@ class DriverController extends Controller
         $driver = DB::table('tblDriver')
             ->join('tblLicenseType', 'tblDriver.intLicenseType', '=', 'tblLicenseType.intLicenseId')
             ->select('tblDriver.*', 'tblLicenseType.strLicenseType')
-            ->where('tblDriver.intDriverID', $id)
+            ->where('tblDriver.strDriverLicense', $id)
             ->first();
 
         if (!is_null($driver)){
