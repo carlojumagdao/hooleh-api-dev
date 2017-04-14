@@ -29,7 +29,7 @@ Route::get('/enforcer', function () {
 
 Route::post('authenticate', 'Auth\AuthController@authenticate');
 
-Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'api/v1'], function () {
+Route::group(['middleware' => ['jwt.auth', 'cors'], 'prefix' => 'api/v1'], function () {
 	Route::resource('enforcers','api\v1\EnforcerController');
 	Route::resource('drivers', 'api\v1\DriverController');	
 	Route::resource('violations', 'api\v1\ViolationController');
