@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Enforcer extends Model
+class User extends Model
 {
 	public $timestamps = false;
-	protected $table = 'tblEnforcer';
-	public $primaryKey = 'intEnforcerID';
+	protected $table = 'users';
+	protected $primaryKey = 'id';
 }

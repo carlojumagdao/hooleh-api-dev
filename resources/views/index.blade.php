@@ -7,7 +7,7 @@
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <!-- Bootstrap 3.3.6 -->
-        <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{ URL::asset('assets/bootstrap/css/bootstrap.min.css') }}">
         <!-- Font Awesome -->
         <link rel="stylesheet" href="{{ URL::asset('assets/bootstrap/css/font-awesome.css') }}">
         <!-- Ionicons -->
@@ -17,15 +17,17 @@
         <!-- DataTables -->
         <link rel="stylesheet" href="{{ URL::asset('assets/plugins/datatables/dataTables.bootstrap.css') }}">
         <!-- Theme style -->
-        <link rel="stylesheet" href="{{ URL::asset('assets/dist/css/AdminLTE.min.css') }}">
+        <link rel="stylesheet" href="{{ URL::asset('assets/dist/css/AdminLTE.css') }}">
         <!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
         <link rel="stylesheet" href="{{ URL::asset('assets/dist/css/skins/_all-skins.min.css') }}">
-        
+
+        <link rel="stylesheet" href="{{ URL::asset('assets/custom/style.css') }}">
+        <meta name="csrf_token" content="{{ csrf_token() }}" />
         
 
     </head>
 
-    <body class="hold-transition skin-blue sidebar">
+    <body class="hold-transition skin-blue sidebar-collapse sidebar-mini">
         <div class="wrapper">
             <header class="main-header">
                 <!-- Logo -->
@@ -130,14 +132,13 @@
         <!-- AdminLTE for demo purposes -->
         <script src="{{ URL::asset('assets/dist/js/demo.js') }}"></script>
         <!-- page script -->
+        <script src="{{ URL::asset('assets/bootstrap/js/validator.min.js') }}"></script>
         <script>
-        $(function () {
-            $("#dtblViolation").DataTable();
-            $("#dtblEnforcer").DataTable();
-            
-        });
+            $(function () {
+                $("#dtblViolation").DataTable();
+            });
         </script>
-
+        @yield('script')
 
     </body>
     
