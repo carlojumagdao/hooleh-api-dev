@@ -105,7 +105,7 @@
                         </table>
                     </div>
                     <div id="loadingEnforcer">
-                      <i id="loadingEnforcerDesign"></i>
+                        <i id="loadingEnforcerDesign"></i>
                     </div>
                 </div>
             </div>

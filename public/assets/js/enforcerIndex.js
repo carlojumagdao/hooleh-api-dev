@@ -1,9 +1,16 @@
 $('#loadingEnforcer').addClass('overlay');
 $('#loadingEnforcerDesign').addClass('fa fa-refresh fa-spin')
-$('document').ready(function(){
-    var x = $("#dtblEnforcer").DataTable();
+
+$('#dtblEnforcer').dataTable( {
+  "initComplete": function( settings, json ) {
     $('#loadingEnforcer').removeClass('overlay');
     $('#loadingEnforcerDesign').removeClass('fa fa-refresh fa-spin')
+  }
+} );
+
+
+
+$('document').ready(function(){
     $('#dtblEnforcer tbody').on('click', '.clickable-row', function () {
         window.location = $(this).data("href");
     } );
