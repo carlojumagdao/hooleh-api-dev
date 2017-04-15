@@ -4,6 +4,7 @@ namespace App\Http\Controllers\web;
 
 use Illuminate\Http\Request;
 use DB;
+use Carbon;
 use Hash;
 use App\Models\TransactionHeader;
 use App\Models\Enforcer;
@@ -16,7 +17,6 @@ class enforcerController extends Controller
 {
     public function index(){
     	$enforcers = Enforcer::where('blEnforcerDelete', 0)
-    		->select('intEnforcerID','strEnforcerFirstname','strEnforcerLastname','datLastSignedin','intUserID')
             ->orderBy('strEnforcerFirstname', 'asc')
             ->get();
         return view('enforcer.index', ['enforcers' => $enforcers]);
@@ -36,7 +36,6 @@ class enforcerController extends Controller
 
     public function getEnforcerData(){
     	$enforcers = Enforcer::where('blEnforcerDelete', 0)
-    		->select('intEnforcerID','strEnforcerFirstname','strEnforcerLastname','datLastSignedin', 'intUserID')
             ->orderBy('strEnforcerFirstname', 'asc')
             ->get();
         return $enforcers;
@@ -44,10 +43,13 @@ class enforcerController extends Controller
 
     public function filter(Request $request){
     	$enforcers = Enforcer::where('blEnforcerDelete', $request->selFilterValue)
-    		->select('intEnforcerID','strEnforcerFirstname','strEnforcerLastname','datLastSignedin', 'intUserID')
             ->orderBy('strEnforcerFirstname', 'asc')
             ->get();
-        return view('enforcer.Table.enforcerTable', ['enforcers' => $enforcers]);
+        if($request->selFilterValue){
+        	return view('enforcer.Table.enforcerSuspendTable', ['enforcers' => $enforcers]);
+        } else {
+        	return view('enforcer.Table.enforcerTable', ['enforcers' => $enforcers]);
+        }
     }
 
     public function suspend(Request $request){
@@ -55,6 +57,7 @@ class enforcerController extends Controller
 
         if (!is_null($enforcer)){
             $enforcer->blEnforcerDelete = 1;
+            $enforcer->TimestampDeleted = Carbon\Carbon::now();
             $enforcer->save();
             $enforcersNewDataSet = $this->getEnforcerData();
             return view('enforcer.Table.enforcerTable', ['enforcers' => $enforcersNewDataSet]);
@@ -63,6 +66,19 @@ class enforcerController extends Controller
         }
     }
 
+
+    public function restore(Request $request){
+    	$enforcer = Enforcer::find($request->strPrimaryKey);
+        if (!is_null($enforcer)){
+            $enforcer->blEnforcerDelete = 0;
+            $enforcer->TimestampUpdated = Carbon\Carbon::now();
+            $enforcer->save();
+            $enforcersNewDataSet = $this->getEnforcerData();
+            return view('enforcer.Table.enforcerTable', ['enforcers' => $enforcersNewDataSet]);
+        }else{
+            return "error";	
+        }
+    }
 
     public function create(Request $request){
     	try{
@@ -101,6 +117,7 @@ class enforcerController extends Controller
         if (!is_null($enforcer)){
             $enforcer->strEnforcerFirstname = $request->strFirstname;
             $enforcer->strEnforcerLastname = $request->strLastname;
+            $enforcer->TimestampUpdated = Carbon\Carbon::now();
             $enforcer->save();
             $enforcersNewDataSet = $this->getEnforcerData();
             return view('enforcer.Table.enforcerTable', ['enforcers' => $enforcersNewDataSet]);

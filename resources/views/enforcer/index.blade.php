@@ -323,7 +323,7 @@
         </div>
         <!-- MODAL RESET PASSWORD -->
 
-        <!-- MODAL SUCCESSFUL RENAME -->
+        <!-- MODAL SUCCESSFUL RESET -->
         <div class="modal fade" id="modalResetPasswordSuccess" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -349,7 +349,61 @@
                 </div>
             </div>
         </div>
-        <!-- MODAL SUCCESSFUL RENAME -->
+        <!-- MODAL SUCCESSFUL RESET -->
+
+        <!-- MODAL SUCCESSFUL SUSPEND ENFORCER -->
+        <div class="modal fade" id="modalSuspendEnforcerSuccess" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Suspend enforcer</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            <img class="img-responsive" src="assets/image/icons/successIcon.png" alt="Success Icon" width="20px" align="left">
+                            &nbsp; Suspend enforcer success.
+                        </p>
+                        <div class="successMessage">
+                            <p>Enforcer <span id="suspendedEnforcer" class="credentials"></span> is now suspended</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" id="btnPrint" class="btn btn-primary">PRINT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL SUCCESSFUL SUSPEND ENFORCER -->
+
+        <!-- MODAL SUCCESSFUL RESTORE ENFORCER -->
+        <div class="modal fade" id="modalRestoredEnforcerSuccess" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Restore enforcer</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            <img class="img-responsive" src="assets/image/icons/successIcon.png" alt="Success Icon" width="20px" align="left">
+                            &nbsp; Restore enforcer success.
+                        </p>
+                        <div class="successMessage">
+                            <p>Enforcer <span id="restoredEnforcer" class="credentials"></span> is now restored</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" id="btnPrint" class="btn btn-primary">PRINT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL SUCCESSFUL RESTORE    ENFORCER -->
 
     </section>
 @stop

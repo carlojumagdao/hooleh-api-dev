@@ -55,6 +55,10 @@ Route::post('/enforcer/suspend', array(
 	'uses' => 'web\enforcerController@suspend',
 	'as' => 'enforcer.suspend'
 ));
+Route::post('/enforcer/restore', array(
+	'uses' => 'web\enforcerController@restore',
+	'as' => 'enforcer.restore'
+));
 Route::get('/enforcer/show/{id}', array(
 	'uses' => 'web\enforcerController@show',
 	'as' => 'enforcer.show'

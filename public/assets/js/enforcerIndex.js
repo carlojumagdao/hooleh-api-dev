@@ -258,7 +258,7 @@ $( ".selFilter" ).change(function() {
         },
         data: {selFilterValue : selFilterValue},
         success:function(data){
-            $('#enforcerTable').empty();
+            $('#enforcerTable').empty();    
             $('#enforcerTable').append(data);
         },error:function(data){ 
             alert("Error!");
@@ -273,9 +273,11 @@ $('#dtblEnforcer tbody').on('click', '.btnSuspendEnforcer', function () {
     bootbox.confirm({ 
         size: "small",
         title: "<b>Suspend " + strFirstname + " " + strLastname + "</b>",
-        message:  "This user will not be able to:<ul><li>Login to Hooleh app.</li><li>Access any data to Hooleh system.</li></ul>",
+        message:  "This enforcer will not be able to:<ul><li>Login to Hooleh app.</li><li>Access any data to Hooleh system.</li></ul>",
         callback: function(result){ 
             if(result){
+                $('#loadingEnforcer').addClass('overlay');
+                $('#loadingEnforcerDesign').addClass('fa fa-refresh fa-spin')
                 $.ajax({
                     url: "enforcer/suspend",
                     type:"POST",
@@ -288,7 +290,9 @@ $('#dtblEnforcer tbody').on('click', '.btnSuspendEnforcer', function () {
                     data: {strPrimaryKey : strPrimaryKey},
                     success:function(data){
                         $('#enforcerTable').empty();
-                        $('#enforcerTable').append(data);
+                        $('#enforcerTable').append(data);  
+                        $('#suspendedEnforcer').text(strFirstname + " " + strLastname);
+                        $('#modalSuspendEnforcerSuccess').modal('show');
                     },error:function(data){ 
                         alert("Error!");
                     }
@@ -297,6 +301,46 @@ $('#dtblEnforcer tbody').on('click', '.btnSuspendEnforcer', function () {
         }
     })
 } );
+
+
+$('#dtblEnforcer tbody').on('click', '.btnRestoreEnforcer', function () {
+    var strFirstname = $(this).parent().parent().parent().find('.classFirstname').text();
+    var strLastname = $(this).parent().parent().parent().find('.classLastname').text();
+    var strPrimaryKey = $(this).parent().parent().parent().find('.classEnforcerPrimaryKey').text(); 
+    bootbox.confirm({ 
+        size: "small",
+        title: "<b>Restore " + strFirstname + " " + strLastname + "</b>",
+        message:  "This enforcer will be able to access Hooleh application",
+        callback: function(result){ 
+            if(result){
+                $('#loadingEnforcer').addClass('overlay');
+                $('#loadingEnforcerDesign').addClass('fa fa-refresh fa-spin')
+                $.ajax({
+                    url: "enforcer/restore",
+                    type:"POST",
+                    beforeSend: function (xhr) {
+                        var token = $('meta[name="csrf_token"]').attr('content');
+                        if (token) {
+                              return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                        }
+                    },
+                    data: {strPrimaryKey : strPrimaryKey},
+                    success:function(data){
+                        $('#enforcerTable').empty();
+                        $('#enforcerTable').append(data);
+                        $('#restoredEnforcer').text(strFirstname + " " + strLastname);
+                        $('#modalRestoredEnforcerSuccess').modal('show');
+                        $(".selFilter").val(0); 
+                    },error:function(data){ 
+                        alert("Error!");
+                    }
+                });
+            }
+        }
+    })
+} );
+
+
 
 
 
