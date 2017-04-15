@@ -39,6 +39,18 @@ Route::post('/enforcer/create', array(
 	'uses' => 'web\enforcerController@create',
 	'as' => 'enforcer.create'
 ));
+Route::post('/enforcer/update', array(
+	'uses' => 'web\enforcerController@update',
+	'as' => 'enforcer.update'
+));
+Route::post('/enforcer/resetpassword', array(
+	'uses' => 'web\enforcerController@resetpassword',
+	'as' => 'enforcer.resetpassword'
+));
+Route::post('/enforcer/filter', array(
+	'uses' => 'web\enforcerController@filter',
+	'as' => 'enforcer.filter'
+));
 Route::get('/enforcer/show/{id}', array(
 	'uses' => 'web\enforcerController@show',
 	'as' => 'enforcer.show'

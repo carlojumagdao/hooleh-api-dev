@@ -1,13 +1,17 @@
 $('document').ready(function(){
     var x = $("#dtblEnforcer").DataTable();
-    $(".clickable-row").click(function() {
+
+    $('#dtblEnforcer tbody').on('click', '.clickable-row', function () {
         window.location = $(this).data("href");
-    });
+    } );
+
 });
 
 $(".addEnforcer").click(function(){
     var passwordGenerated = randomString(7);
-    $("#form").validator('update');
+    if($('#form').data('bs.validator').validate().hasErrors()) {
+        $('#form').data('bs.validator').reset();
+    }
     $("#formErrorMessage").hide();
     $("#inputPassword").val(passwordGenerated);
     $("#inputReEnterPassword").val(passwordGenerated);
@@ -18,9 +22,6 @@ $(".addEnforcer").click(function(){
     $("#setPasswordBlock").show();
 });
 
-$(".btnCancelCreateEnforcer").click(function(){
-    $("#form").validator('destroy');
-});
 
 function randomString(length){
     var stringGenerated = '';
@@ -51,6 +52,8 @@ $('#form').validator().on('submit', function (e) {
     if (e.isDefaultPrevented()) {
         // handle the invalid form...
     } else {
+        $('#loadingEnforcer').addClass('overlay');
+        $('#loadingEnforcerDesign').addClass('fa fa-refresh fa-spin')
         /* 
             for create enforcer loading state
         */
@@ -79,8 +82,6 @@ $('#form').validator().on('submit', function (e) {
                     $("#formErrorMessage").show();
                     $btnCreateEnforcer.button('reset');  
                 } else{
-                    $('#loadingEnforcer').addClass('overlay');
-                    $('#loadingEnforcerDesign').addClass('fa fa-refresh fa-spin')
                     $('#enforcerTable').empty();
                     $('#enforcerTable').append(data);
                     $('#modalAddEnforcer').modal('hide');
@@ -89,7 +90,8 @@ $('#form').validator().on('submit', function (e) {
                     $('#successFirstname').text(strFirstname);
                     $('#successLastname').text(strLastname);
                     $('#modalSuccessfulCreation').modal('show');
-                    $btnCreateEnforcer.button('reset');  
+                    $btnCreateEnforcer.button('reset');
+                    $(".selFilter").val(0);  
                 }
                 
             },error:function(data){ 
@@ -103,7 +105,9 @@ $('#form').validator().on('submit', function (e) {
 $("#btnCreateAnotherEnforcer").click(function(){
     $('#modalSuccessfulCreation').modal('hide');
     var passwordGenerated = randomString(7);
-    $("#form").validator('update');
+    if($('#form').data('bs.validator').validate().hasErrors()) {
+        $('#form').data('bs.validator').reset();
+    }
     $("#formErrorMessage").hide();
     $("#inputPassword").val(passwordGenerated);
     $("#inputReEnterPassword").val(passwordGenerated);
@@ -115,10 +119,152 @@ $("#btnCreateAnotherEnforcer").click(function(){
     $('#modalAddEnforcer').modal('show');
 });
 
+$('#dtblEnforcer tbody').on('click', '.btnRenameEnforcer', function () {
+    if($('#formRename').data('bs.validator').validate().hasErrors()) {
+        $('#formRename').data('bs.validator').reset();
+    }
+    var enforcerPrimaryKey = $(this).parent().parent().parent().find('.classEnforcerPrimaryKey').text(); 
+    var enforcerFirstname = $(this).parent().parent().parent().find('.classFirstname').text(); 
+    var enforcerLastname = $(this).parent().parent().parent().find('.classLastname').text(); 
+    
+    $("#inputFirstnameRename").val(enforcerFirstname);
+    $("#inputLastnameRename").val(enforcerLastname);
+    $("#inputEnforcerPrimaryKey").val(enforcerPrimaryKey);
+    $("#formErrorMessageRename").hide();
+    $('#modalRenameEnforcer').modal('show');
+
+} );
 
 
+$('#formRename').validator().on('submit', function (e) {
+    if (e.isDefaultPrevented()) {
+        // handle the invalid form...
+    } else {
+        /* 
+            for create enforcer loading state
+        */
+        var $btnRenameEnforcerSubmit = $('#btnRenameEnforcerSubmit');
+        $btnRenameEnforcerSubmit.button('loading');
+        /*
+            Submit data to the controller using ajax
+        */
+        var strFirstname = $("#inputFirstnameRename").val();
+        var strLastname = $("#inputLastnameRename").val();
+        var strPrimaryKey = $("#inputEnforcerPrimaryKey").val();
+        $.ajax({
+            url: "enforcer/update",
+            type:"POST",
+            beforeSend: function (xhr) {
+                var token = $('meta[name="csrf_token"]').attr('content');
+                if (token) {
+                      return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                }
+            },
+            data: {strPrimaryKey : strPrimaryKey, strFirstname : strFirstname, strLastname : strLastname},
+            success:function(data){
+                if(data == 'error'){
+                    $("#formErrorMessageRename").show();
+                    $btnRenameEnforcerSubmit.button('reset');  
+                } else{
+                    $('#enforcerTable').empty();
+                    $('#enforcerTable').append(data);
+                    $('#modalRenameEnforcer').modal('hide');  
+                    $('#updatedName').text(strFirstname +' '+ strLastname);
+                    $('#modalSuccessfulRename').modal('show');
+                    $btnRenameEnforcerSubmit.button('reset');
+                    $(".selFilter").val(0); 
+                }
+                
+            },error:function(data){ 
+                alert("Error!");
+            }
+        });
+    }
+    return false;
+})
+
+$("#autoGeneratePasswordReset").click(function(){
+    var passwordGenerated = randomString(7);
+    $("#inputPasswordReset").val(passwordGenerated);
+    $("#inputReEnterPasswordReset").val(passwordGenerated);
+});
+
+$('#dtblEnforcer tbody').on('click', '.btnResetPassword', function () {
+    if($('#formResetPassword').data('bs.validator').validate().hasErrors()) {
+        $('#formResetPassword').data('bs.validator').reset();
+    }
+    var userID = $(this).parent().parent().parent().find('.classUserID').text();
+    $("#inputUserID").val(userID); 
+    $('#modalResetPassword').modal('show');
+    $("#inputPasswordReset").val("");
+    $("#inputReEnterPasswordReset").val("");
+} );
+
+$('#formResetPassword').validator().on('submit', function (e) {
+    if (e.isDefaultPrevented()) {
+        // handle the invalid form...
+    } else {
+        /* 
+            for create enforcer loading state
+        */
+        var $btnResetPasswordSubmit = $('#btnResetPasswordSubmit');
+        $btnResetPasswordSubmit.button('loading');
+        /*
+            Submit data to the controller using ajax
+        */
+        var intUserID = $("#inputUserID").val();
+        var strPassword = $("#inputPasswordReset").val();
+        $.ajax({
+            url: "enforcer/resetpassword",
+            type:"POST",
+            beforeSend: function (xhr) {
+                var token = $('meta[name="csrf_token"]').attr('content');
+                if (token) {
+                      return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                }
+            },
+            data: {intUserID : intUserID, strPassword : strPassword},
+            success:function(data){
+                if(data == 'error'){
+                    $btnResetPasswordSubmit.button('reset');  
+                } else{
+                    $('#modalResetPassword').modal('hide');  
+                    $('#updatedPassword').text(strPassword);
+                    $('#modalResetPasswordSuccess').modal('show');
+                    $btnResetPasswordSubmit.button('reset');
+                }
+                
+            },error:function(data){ 
+                alert("Error!");
+            }
+        });
+    }
+    return false;
+})
 
 
+$( ".selFilter" ).change(function() {
+    var selFilterValue = $( ".selFilter" ).val();
+    $('#loadingEnforcer').addClass('overlay');
+    $('#loadingEnforcerDesign').addClass('fa fa-refresh fa-spin')
+   $.ajax({
+        url: "enforcer/filter",
+        type:"POST",
+        beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+            if (token) {
+                  return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+        data: {selFilterValue : selFilterValue},
+        success:function(data){
+            $('#enforcerTable').empty();
+            $('#enforcerTable').append(data);
+        },error:function(data){ 
+            alert("Error!");
+        }
+    });
+});
 
 
 

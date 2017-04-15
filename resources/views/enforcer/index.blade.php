@@ -22,8 +22,16 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">Filters</h3>
                     </div>
-                    <div class="box-body box-profile">
-                    <button type="button" class="btn btn-primary btn-block addEnforcer" data-toggle="modal" data-target="#modalAddEnforcer" title="AddEnforcer">Add enforcer</button>
+                    <div class="box-body">
+                        <div class="form-group">
+                            <select class="form-control selFilter">
+                                <option value="0">Active users</option>
+                                <option value="1">Suspended users</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary btn-block addEnforcer" data-toggle="modal" data-target="#modalAddEnforcer" title="AddEnforcer">Add enforcer</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -35,7 +43,11 @@
                     <div class="box-body">
                         <table id="dtblEnforcer" class="table table-bordered table-hover">
                             <thead>
-                                <tr>
+                                <tr>  
+                                    <th class="hide"></th>
+                                    <th class="hide"></th>
+                                    <th class="hide"></th>
+                                    <th class="hide"></th>
                                     <th>Name</th>
                                     <th>Last signed-in</th>
                                     <th></th>
@@ -44,6 +56,10 @@
                             <tbody>
                                 @foreach($enforcers as $enforcer)
                                     <tr>
+                                        <td class="hide classEnforcerPrimaryKey">{{$enforcer->intEnforcerID}}</td>
+                                        <td class="hide classFirstname">{{$enforcer->strEnforcerFirstname}}</td>
+                                        <td class="hide classLastname">{{$enforcer->strEnforcerLastname}}</td>
+                                        <td class="hide classUserID">{{$enforcer->intUserID}}</td>
                                         <td style="cursor: pointer" class="clickable-row name" data-href="enforcer/show/{{$enforcer->intEnforcerID}}">
                                             {{$enforcer->strEnforcerFirstname}} {{$enforcer->strEnforcerLastname}}
                                         </td>
@@ -55,12 +71,12 @@
                                             {{$dateLastSignedin}}
                                         </td>
                                         <td width="150px">
-                                            <button type="button" class="btn btn-sm btn-default" data-toggle="tooltip" title="Reset Password">
-                                                    <i class="fa fa-fw fa-unlock"></i>
-                                            </button>
+                                            
                                             <div class="btn-group">
-                                                
-                                                <button type="button" class="btn btn-sm btn-default" data-toggle="tooltip" title="Rename">
+                                                <button type="button" class="btn btn-sm btn-default btnResetPassword" data-toggle="tooltip" title="Reset Password">
+                                                        <i class="fa fa-fw fa-unlock"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-default btnRenameEnforcer" data-toggle="tooltip" title="Rename">
                                                     <i class="fa fa-fw fa-pencil"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
@@ -69,8 +85,6 @@
                                                 </button>
                                                 <ul class="dropdown-menu" role="menu">
                                                     <li><a href="#">Suspend Enforcer</a></li>
-                                                    <li class="divider"></li>
-                                                    <li><a href="#">Delete Enforcer</a></li>
                                                 </ul>
                                             </div>
                                         </td>
@@ -79,6 +93,10 @@
                             </tbody>
                             <tfoot>
                                 <tr>
+                                    <th class="hide"></th>
+                                    <th class="hide"></th>
+                                    <th class="hide"></th>
+                                    <th class="hide"></th>
                                     <th>Name</th>
                                     <th>Last signed-in</th>
                                     <th></th>
@@ -143,7 +161,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button"  class="btn btn-default pull-left btnCancelCreateEnforcer" data-dismiss="modal">Cancel</button>
+                            <button type="button"  class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                             <span class="form-group">
                                 <button type="submit" id="btnCreateEnforcer" class="btn btn-primary">Create</button>
                             </span>
@@ -184,6 +202,154 @@
             </div>
         </div>
         <!-- MODAL SUCCESSFUL CREATION -->
+
+        <!-- MODAL RENAME ENFORCER -->
+        <div class="modal fade" id="modalRenameEnforcer" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Rename enforcer</h4>
+                    </div>
+
+                    <form role="form" data-toggle="validator" id="formRename">
+                        <div class="modal-body">
+                            <div class="box-body">
+                                <p>Before renaming this user, ask the enforcer to sign out of his or her account. After you rename this enforcer:</p>
+                                <ul>
+                                    <li>The rename operation can take up to 5 minutes.</li>
+                                    <li>The new name might not be available for up to 5 minutes.</li>
+                                </ul>
+                                <p class="help-block col-sm-12" id="formErrorMessageRename" style="color:red;">
+                                    Something went wrong, please check your inputs.
+                                </p>
+                                <div class="form-group  col-sm-6">
+                                    <input type="text" class="form-control" id="inputFirstnameRename" placeholder="First name" size="35" required>
+                                </div>
+                                <div class="form-group  col-sm-6">
+                                    <input type="text" class="form-control" id="inputLastnameRename" placeholder="Last name" size="35" required>
+                                </div>
+                                <p class="help-block"></p>
+                                <div class="form-group  col-sm-6">
+                                    <input type="hidden" class="form-control" id="inputEnforcerPrimaryKey">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button"  class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                            <span class="form-group">
+                                <button type="submit" id="btnRenameEnforcerSubmit" class="btn btn-primary">Rename enforcer</button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL RENAME ENFORCER-->
+
+        <!-- MODAL SUCCESSFUL RENAME -->
+        <div class="modal fade" id="modalSuccessfulRename" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Rename enforcer</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            <img class="img-responsive" src="assets/image/icons/successIcon.png" alt="Success Icon" width="20px" align="left">
+                            &nbsp; Rename successful.
+                        </p>
+                        <div class="successMessage">
+                            <p>The updated name is: <span id="updatedName" class="credentials"></span></p>
+                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" id="btnPrint" class="btn btn-primary">PRINT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL SUCCESSFUL RENAME -->
+
+        <!-- MODAL RESET PASSWORD -->
+        <div class="modal fade" id="modalResetPassword" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Reset password</h4>
+                    </div>
+
+                    <form role="form" data-toggle="validator" id="formResetPassword">
+                        <div class="modal-body">
+                            <div class="box-body">
+                                <div class="form-group col-sm-12"></div>
+                                <div class="">
+                                    <div class="form-group col-sm-6">
+                                        <input type="password" class="form-control" id="inputPasswordReset" data-minlength="6" placeholder="Password" size="35" required>
+                                        <div class="help-block">Minimum of 6 characters</div>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <input type="password" class="form-control" id="inputReEnterPasswordReset" data-minlength="6" placeholder="Confirm password" size="35" data-match="#inputPasswordReset" data-match-error="Whoops, these don't match" required>
+                                        <div class="help-block with-errors"></div>
+                                        <div class="form-group  col-sm-6">
+                                            <input type="hidden" class="form-control" id="inputUserID">
+                                        </div>
+                                    </div>
+                                    <p class="help-block col-sm-12">
+                                        <a id="autoGeneratePasswordReset" style="cursor: pointer">
+                                            Auto-generate password
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button"  class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                            <span class="form-group">
+                                <button type="submit" id="btnResetPasswordSubmit" class="btn btn-primary">Reset password</button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL RESET PASSWORD -->
+
+        <!-- MODAL SUCCESSFUL RENAME -->
+        <div class="modal fade" id="modalResetPasswordSuccess" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Reset password</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            <img class="img-responsive" src="assets/image/icons/successIcon.png" alt="Success Icon" width="20px" align="left">
+                            &nbsp; Reset password successful.
+                        </p>
+                        <div class="successMessage">
+                            <p>The new password is: <span id="updatedPassword" class="credentials"></span></p>
+                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" id="btnPrint" class="btn btn-primary">PRINT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL SUCCESSFUL RENAME -->
+
     </section>
 @stop
 

@@ -16,7 +16,7 @@ class enforcerController extends Controller
 {
     public function index(){
     	$enforcers = Enforcer::where('blEnforcerDelete', 0)
-    		->select('intEnforcerID','strEnforcerFirstname','strEnforcerLastname','datLastSignedin')
+    		->select('intEnforcerID','strEnforcerFirstname','strEnforcerLastname','datLastSignedin','intUserID')
             ->orderBy('strEnforcerFirstname', 'asc')
             ->get();
         return view('enforcer.index', ['enforcers' => $enforcers]);
@@ -36,10 +36,18 @@ class enforcerController extends Controller
 
     public function getEnforcerData(){
     	$enforcers = Enforcer::where('blEnforcerDelete', 0)
-    		->select('intEnforcerID','strEnforcerFirstname','strEnforcerLastname','datLastSignedin')
+    		->select('intEnforcerID','strEnforcerFirstname','strEnforcerLastname','datLastSignedin', 'intUserID')
             ->orderBy('strEnforcerFirstname', 'asc')
             ->get();
         return $enforcers;
+    }
+
+    public function filter(Request $request){
+    	$enforcers = Enforcer::where('blEnforcerDelete', $request->selFilterValue)
+    		->select('intEnforcerID','strEnforcerFirstname','strEnforcerLastname','datLastSignedin', 'intUserID')
+            ->orderBy('strEnforcerFirstname', 'asc')
+            ->get();
+        return view('enforcer.Table.enforcerTable', ['enforcers' => $enforcers]);
     }
 
     public function create(Request $request){
@@ -56,7 +64,7 @@ class enforcerController extends Controller
 
             $user->save();
             
-            $enforcer->strEnforceridNumber 	= $request->strEnforcerID;
+            $enforcer->strEnforcerIdNumber 	= $request->strEnforcerID;
             $enforcer->strEnforcerFirstname = $request->strFirstname;
             $enforcer->strEnforcerLastname 	= $request->strLastname;
             $enforcer->intUserID 			= $user->id;
@@ -69,6 +77,33 @@ class enforcerController extends Controller
 	        DB::rollBack();	
 	        //return $e->getMessage(); for debugging
 	        return "error";
+        }
+    }
+
+    public function update(Request $request)
+    {
+        $enforcer = Enforcer::find($request->strPrimaryKey);
+
+        if (!is_null($enforcer)){
+            $enforcer->strEnforcerFirstname = $request->strFirstname;
+            $enforcer->strEnforcerLastname = $request->strLastname;
+            $enforcer->save();
+            $enforcersNewDataSet = $this->getEnforcerData();
+            return view('enforcer.Table.enforcerTable', ['enforcers' => $enforcersNewDataSet]);
+        }else{
+            return "error";	
+        }
+    }
+
+	public function resetpassword(Request $request)
+    {
+        $user = User::find($request->intUserID);
+        if (!is_null($user)){
+            $user->password = Hash::make($request->strPassword);
+            $user->save();
+            return "success";
+        }else{
+            return "error";	
         }
     }
 }

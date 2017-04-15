@@ -6,15 +6,23 @@
         <div class="box-body">
             <table id="dtblEnforcer" class="table table-bordered table-hover">
                 <thead>
-                    <tr>
+                    <tr>  
+                        <th class="hide"></th>
+                        <th class="hide"></th>
+                        <th class="hide"></th>
+                        <th class="hide"></th>
                         <th>Name</th>
                         <th>Last signed-in</th>
                         <th></th>
                     </tr>
                 </thead>
-                <tbody id="enforcerTable">
+                <tbody>
                     @foreach($enforcers as $enforcer)
                         <tr>
+                            <td class="hide classEnforcerPrimaryKey">{{$enforcer->intEnforcerID}}</td>
+                            <td class="hide classFirstname">{{$enforcer->strEnforcerFirstname}}</td>
+                            <td class="hide classLastname">{{$enforcer->strEnforcerLastname}}</td>
+                            <td class="hide classUserID">{{$enforcer->intUserID}}</td>
                             <td style="cursor: pointer" class="clickable-row name" data-href="enforcer/show/{{$enforcer->intEnforcerID}}">
                                 {{$enforcer->strEnforcerFirstname}} {{$enforcer->strEnforcerLastname}}
                             </td>
@@ -26,12 +34,12 @@
                                 {{$dateLastSignedin}}
                             </td>
                             <td width="150px">
-                                <button type="button" class="btn btn-sm btn-default" data-toggle="tooltip" title="Reset Password">
-                                        <i class="fa fa-fw fa-unlock"></i>
-                                </button>
+                                
                                 <div class="btn-group">
-                                    
-                                    <button type="button" class="btn btn-sm btn-default" data-toggle="tooltip" title="Rename">
+                                    <button type="button" class="btn btn-sm btn-default btnResetPassword" data-toggle="tooltip" title="Reset Password">
+                                            <i class="fa fa-fw fa-unlock"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-default btnRenameEnforcer" data-toggle="tooltip" title="Rename">
                                         <i class="fa fa-fw fa-pencil"></i>
                                     </button>
                                     <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
@@ -40,8 +48,6 @@
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
                                         <li><a href="#">Suspend Enforcer</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#">Delete Enforcer</a></li>
                                     </ul>
                                 </div>
                             </td>
@@ -50,6 +56,10 @@
                 </tbody>
                 <tfoot>
                     <tr>
+                        <th class="hide"></th>
+                        <th class="hide"></th>
+                        <th class="hide"></th>
+                        <th class="hide"></th>
                         <th>Name</th>
                         <th>Last signed-in</th>
                         <th></th>
