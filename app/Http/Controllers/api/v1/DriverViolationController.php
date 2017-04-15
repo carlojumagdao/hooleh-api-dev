@@ -135,7 +135,7 @@ class DriverViolationController extends Controller
 
         $listViolationToday = DB::table('tblViolationTransactionHeader')
             ->join('tblDriver', 'tblDriver.intDriverID', '=', 'tblViolationTransactionHeader.intDriverID')
-            ->select('tblDriver.*')
+            ->select('tblDriver.*', 'tblViolationTransactionHeader.*')
             ->where('tblViolationTransactionHeader.TimestampCreated', '>=', $now)
             ->get();
 
