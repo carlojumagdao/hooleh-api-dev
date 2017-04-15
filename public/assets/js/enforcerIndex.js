@@ -1,6 +1,9 @@
+$('#loadingEnforcer').addClass('overlay');
+$('#loadingEnforcerDesign').addClass('fa fa-refresh fa-spin')
 $('document').ready(function(){
     var x = $("#dtblEnforcer").DataTable();
-
+    $('#loadingEnforcer').removeClass('overlay');
+    $('#loadingEnforcerDesign').removeClass('fa fa-refresh fa-spin')
     $('#dtblEnforcer tbody').on('click', '.clickable-row', function () {
         window.location = $(this).data("href");
     } );
