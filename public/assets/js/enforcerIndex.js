@@ -247,7 +247,7 @@ $( ".selFilter" ).change(function() {
     var selFilterValue = $( ".selFilter" ).val();
     $('#loadingEnforcer').addClass('overlay');
     $('#loadingEnforcerDesign').addClass('fa fa-refresh fa-spin')
-   $.ajax({
+    $.ajax({
         url: "enforcer/filter",
         type:"POST",
         beforeSend: function (xhr) {
@@ -266,8 +266,37 @@ $( ".selFilter" ).change(function() {
     });
 });
 
-
-
+$('#dtblEnforcer tbody').on('click', '.btnSuspendEnforcer', function () {
+    var strFirstname = $(this).parent().parent().parent().parent().parent().find('.classFirstname').text();
+    var strLastname = $(this).parent().parent().parent().parent().parent().find('.classLastname').text();
+    var strPrimaryKey = $(this).parent().parent().parent().parent().parent().find('.classEnforcerPrimaryKey').text(); 
+    bootbox.confirm({ 
+        size: "small",
+        title: "<b>Suspend " + strFirstname + " " + strLastname + "</b>",
+        message:  "This user will not be able to:<ul><li>Login to Hooleh app.</li><li>Access any data to Hooleh system.</li></ul>",
+        callback: function(result){ 
+            if(result){
+                $.ajax({
+                    url: "enforcer/suspend",
+                    type:"POST",
+                    beforeSend: function (xhr) {
+                        var token = $('meta[name="csrf_token"]').attr('content');
+                        if (token) {
+                              return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                        }
+                    },
+                    data: {strPrimaryKey : strPrimaryKey},
+                    success:function(data){
+                        $('#enforcerTable').empty();
+                        $('#enforcerTable').append(data);
+                    },error:function(data){ 
+                        alert("Error!");
+                    }
+                });
+            }
+        }
+    })
+} );
 
 
 

@@ -85,7 +85,7 @@
                                                     <span class="sr-only">Toggle Dropdown</span>
                                                 </button>
                                                 <ul class="dropdown-menu" role="menu">
-                                                    <li><a href="#">Suspend Enforcer</a></li>
+                                                    <li><a href="#" class="btnSuspendEnforcer">Suspend Enforcer</a></li>
                                                 </ul>
                                             </div>
                                         </td>

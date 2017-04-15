@@ -133,6 +133,8 @@
         <script src="{{ URL::asset('assets/dist/js/demo.js') }}"></script>
         <!-- page script -->
         <script src="{{ URL::asset('assets/bootstrap/js/validator.min.js') }}"></script>
+        <!-- page script -->
+        <script src="{{ URL::asset('assets/bootstrap/js/bootbox.min.js') }}"></script>
         <script>
             $(function () {
                 $("#dtblViolation").DataTable();

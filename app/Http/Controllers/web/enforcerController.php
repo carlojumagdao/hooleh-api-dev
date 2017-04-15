@@ -50,6 +50,20 @@ class enforcerController extends Controller
         return view('enforcer.Table.enforcerTable', ['enforcers' => $enforcers]);
     }
 
+    public function suspend(Request $request){
+    	$enforcer = Enforcer::find($request->strPrimaryKey);
+
+        if (!is_null($enforcer)){
+            $enforcer->blEnforcerDelete = 1;
+            $enforcer->save();
+            $enforcersNewDataSet = $this->getEnforcerData();
+            return view('enforcer.Table.enforcerTable', ['enforcers' => $enforcersNewDataSet]);
+        }else{
+            return "error";	
+        }
+    }
+
+
     public function create(Request $request){
     	try{
             DB::beginTransaction();  
