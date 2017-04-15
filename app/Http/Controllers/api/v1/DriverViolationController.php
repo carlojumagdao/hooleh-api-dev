@@ -141,4 +141,25 @@ class DriverViolationController extends Controller
 
         return response()->json($listViolationToday);
     }
+
+    public function ticketDetails($id){
+
+
+        $dateViolation = DB::table('tblViolationTransactionHeader')
+            ->select('TimestampCreated')
+            ->where('strControlNumber', $id)
+            ->first();
+
+        $ticketDetails = DB::table('tblViolationTransactionHeader')
+            ->join('tblViolationTransactionDetail','tblViolationTransactionDetail.intViolationTransactionHeaderID', '=', 'tblViolationTransactionHeader.intViolationTransactionHeaderID')
+            ->join('tblViolation', 'tblViolation.intViolationID', '=', 'tblViolationTransactionDetail.intViolationID')
+            ->join('tblViolationFee', 'tblViolationFee.intViolationID', '=', 'tblViolation.intViolationID')
+            ->select('tblViolation.*', 'tblViolationFee.dblPrice')
+            ->where('tblViolationTransactionHeader.strControlNumber', $id)
+            ->where('tblViolationFee.datStartDate', '<=', $dateViolation->TimestampCreated)
+            ->where('tblViolationFee.datEndDate', '>=', $dateViolation->TimestampCreated)
+            ->get();
+
+        return response()->json($ticketDetails);
+    }
 }

@@ -37,6 +37,7 @@ Route::group(['middleware' => ['jwt.auth', 'cors'], 'prefix' => 'api/v1', 'names
 
 	Route::get('enforcercurrentlogin', 'EnforcerController@enforcerCurrentLogin');
 	Route::get('listviolationtoday', 'DriverViolationController@enforcerListViolationToday');
+	Route::get('violationdetails/{id}', 'DriverViolationController@ticketDetails');
 });
 
 	
