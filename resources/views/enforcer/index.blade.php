@@ -35,6 +35,7 @@
                     </div>
                 </div>
             </div>
+            <div class="loading">Loading&#8230;</div>
             <div class="col-md-9" id="enforcerTable">
                 <div class="box">
                     <div class="box-header">
