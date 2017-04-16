@@ -13,7 +13,6 @@
             <li class="active">Enforcer</li>
         </ol>
     </section>
-
     <!-- Main content -->
     <section class="content">
         <div class="row">
@@ -135,7 +134,7 @@
                                 </div>
                                 <p class="help-block"></p>
                                 <div class="form-group  col-sm-6">
-                                    <input type="text" class="form-control" id="inputEnforcerID" placeholder="Enforcer ID No." size="35" required>
+                                    <input type="email" class="form-control" id="inputEnforcerID" placeholder="Email" size="35" required>
                                 </div>
 
                                 <p class="help-block col-sm-12" id="setPasswordBlock">Temporary password will be assigned - 
@@ -189,7 +188,7 @@
                         </p>
                         <div class="successMessage">
                             <p>Sign in to Hooleh app using the following credential:</p>
-                            <p>Enforcer ID:</p>
+                            <p>Email:</p>
                             <p id="successUsername" class="credentials"></p>
                             <p>Password:</p>
                             <p id="successPassword" class="credentials"></p>
@@ -197,7 +196,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal" id="btnCreateAnotherEnforcer">CREATE ANOTHER USER</button>
-                        <button type="button" id="btnPrint" class="btn btn-primary">PRINT</button>
+                        <button type="button" id="btnPrint" class="btn btn-default">PRINT</button>
+                        <button type="button" id="btnSendEmail" class="btn btn-primary">SEND EMAIL</button>
                     </div>
                 </div>
             </div>

@@ -54,7 +54,6 @@ class enforcerController extends Controller
 
     public function suspend(Request $request){
     	$enforcer = Enforcer::find($request->strPrimaryKey);
-
         if (!is_null($enforcer)){
             $enforcer->blEnforcerDelete = 1;
             $enforcer->TimestampDeleted = Carbon\Carbon::now();
@@ -94,7 +93,7 @@ class enforcerController extends Controller
 
             $user->save();
             
-            $enforcer->strEnforcerIdNumber 	= $request->strEnforcerID;
+            $enforcer->strEnforcerEmail 	= $request->strEnforcerID;
             $enforcer->strEnforcerFirstname = $request->strFirstname;
             $enforcer->strEnforcerLastname 	= $request->strLastname;
             $enforcer->intUserID 			= $user->id;
