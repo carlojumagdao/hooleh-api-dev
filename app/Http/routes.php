@@ -70,13 +70,18 @@ Route::get('/enforcer/data', array(
 //----------Enforcer----------//
 
 //----------API----------//
-Route::group(['middleware' => 'cors'], function(){
-	Route::resource('/api/v1/enforcers','api\v1\EnforcerController');
-});
-Route::resource('/api/v1/drivers', 'api\v1\DriverController');	
-Route::resource('/api/v1/violations', 'api\v1\ViolationController');
-Route::resource('/api/v1/driverviolations', 'api\v1\DriverViolationController');
-//----------API----------//
-Route::auth();
 
-Route::get('/home', 'HomeController@index');
+Route::post('api/authenticate', 'Auth\AuthController@authenticate');
+
+Route::group(['middleware' => ['jwt.auth', 'cors'], 'prefix' => 'api/v1', 'namespace' => 'api\v1'], function () {
+	Route::resource('enforcers','EnforcerController');
+	Route::resource('drivers', 'DriverController');	
+	Route::resource('violations', 'ViolationController');
+	Route::resource('driverviolations', 'DriverViolationController');
+
+	Route::get('enforcercurrentlogin', 'EnforcerController@enforcerCurrentLogin');
+	Route::get('listviolationtoday', 'DriverViolationController@enforcerListViolationToday');
+	Route::get('violationdetails/{id}', 'DriverViolationController@ticketDetails');
+});
+
+	

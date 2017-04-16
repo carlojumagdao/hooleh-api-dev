@@ -8,6 +8,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use DB;
 use App\Models\Driver;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Carbon\Carbon;
 
 class DriverViolationController extends Controller
 {
@@ -42,6 +44,8 @@ class DriverViolationController extends Controller
         try {
             DB::beginTransaction();
 
+            $user = JWTAuth::parseToken()->toUser();
+
             $driverID = DB::table('tblDriver')
                 ->select('intDriverID')
                 ->where('strDriverLicense', $request->strDriverLicenseNumber)
@@ -49,7 +53,7 @@ class DriverViolationController extends Controller
 
             $id = DB::table('tblViolationTransactionHeader')->insertGetId([
                 'strControlNumber' => $request->strControlNumber,
-                'intEnforcerID' => $request->intEnforcerID,
+                'intEnforcerID' => $user->Enforcer->intEnforcerID,
                 'intDriverID' => $driverID->intDriverID,
                 'strRegistrationSticker' => $request->strRegistrationSticker,
                 'strPlateNumber' => $request->strPlateNumber,
@@ -120,5 +124,42 @@ class DriverViolationController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function enforcerListViolationToday(){
+        $user = JWTAuth::parseToken()->toUser();
+        $now = Carbon::now()->addHours(8);
+        $now->hour = 0;
+        $now->minute = 0;
+        $now->second = 0;
+
+        $listViolationToday = DB::table('tblViolationTransactionHeader')
+            ->join('tblDriver', 'tblDriver.intDriverID', '=', 'tblViolationTransactionHeader.intDriverID')
+            ->select('tblDriver.*', 'tblViolationTransactionHeader.*')
+            ->where('tblViolationTransactionHeader.TimestampCreated', '>=', $now)
+            ->get();
+
+        return response()->json($listViolationToday);
+    }
+
+    public function ticketDetails($id){
+
+
+        $dateViolation = DB::table('tblViolationTransactionHeader')
+            ->select('TimestampCreated')
+            ->where('strControlNumber', $id)
+            ->first();
+
+        $ticketDetails = DB::table('tblViolationTransactionHeader')
+            ->join('tblViolationTransactionDetail','tblViolationTransactionDetail.intViolationTransactionHeaderID', '=', 'tblViolationTransactionHeader.intViolationTransactionHeaderID')
+            ->join('tblViolation', 'tblViolation.intViolationID', '=', 'tblViolationTransactionDetail.intViolationID')
+            ->join('tblViolationFee', 'tblViolationFee.intViolationID', '=', 'tblViolation.intViolationID')
+            ->select('tblViolation.*', 'tblViolationFee.dblPrice')
+            ->where('tblViolationTransactionHeader.strControlNumber', $id)
+            ->where('tblViolationFee.datStartDate', '<=', $dateViolation->TimestampCreated)
+            ->where('tblViolationFee.datEndDate', '>=', $dateViolation->TimestampCreated)
+            ->get();
+
+        return response()->json($ticketDetails);
     }
 }

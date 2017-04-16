@@ -9,6 +9,7 @@ use App\Models\Violation;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ViolationController extends Controller
 {
@@ -52,34 +53,43 @@ class ViolationController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            DB::beginTransaction();
+        $user = JWTAuth::parseToken()->toUser();
+        if ($user['original']['tinyintIdentifier'] == 1){
+            try {
+                DB::beginTransaction();
 
-            $violationID = DB::table('tblViolation')->insertGetId([
-                'strViolationCode' => $request->strViolationCode,
-                'strViolationDescription' => $request->strViolationDescription
+                $violationID = DB::table('tblViolation')->insertGetId([
+                    'strViolationCode' => $request->strViolationCode,
+                    'strViolationDescription' => $request->strViolationDescription
+                ]);
+
+                DB::table('tblViolationFee')->insert([
+                    'intViolationID' => $violationID,
+                    'dblPrice' => $request->dblPrice
+                ]);
+
+                DB::commit();
+                return response()->json(
+                    [
+                        'message' => 'Violation Created.',
+                        'status code' => 201
+                    ]
+                );
+            } catch (Exception $e) {
+                return response()->json(
+                    [
+                        'message' => $e.getMessage(),
+                        'status code' => 400
+                    ]
+                );
+            }
+        } else{
+            return response()->json([
+                'message' => 'Unauthorized.',
+                'status Code' => 401
             ]);
-
-            DB::table('tblViolationFee')->insert([
-                'intViolationID' => $violationID,
-                'dblPrice' => $request->dblPrice
-            ]);
-
-            DB::commit();
-            return response()->json(
-                [
-                    'message' => 'Violation Created.',
-                    'status code' => 201
-                ]
-            );
-        } catch (Exception $e) {
-            return response()->json(
-                [
-                    'message' => $e.getMessage(),
-                    'status code' => 400
-                ]
-            );
         }
+            
     }
 
     /**
@@ -124,65 +134,71 @@ class ViolationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $violation = Violation::find($id);
-        if (!is_null($violation)){
-            try {
-                DB::beginTransaction();
-                $now = Carbon::now()->addHours(8);
-                $violationFee = DB::table('tblViolationFee')
-                    ->where('tblViolationFee.intViolationID', $id)
-                    ->where([
-                        ['tblViolationFee.datStartDate', '<=', $now],
-                        ['tblViolationFee.datEndDate', '>=', $now]
-                    ])
-                    ->select('tblViolationFee.*')
-                    ->first();
-                
-                $violation->strViolationCode = $request->strViolationCode;
-                $violation->strViolationDescription = $request->strViolationDescription;    
-                $violation->save();
+        $user = JWTAuth::parseToken()->toUser();
+        if ($user['original']['tinyintIdentifier'] == 1){
+            $violation = Violation::find($id);
+            if (!is_null($violation)){
+                try {
+                    DB::beginTransaction();
+                    $now = Carbon::now()->addHours(8);
+                    $violationFee = DB::table('tblViolationFee')
+                        ->where('tblViolationFee.intViolationID', $id)
+                        ->where([
+                            ['tblViolationFee.datStartDate', '<=', $now],
+                            ['tblViolationFee.datEndDate', '>=', $now]
+                        ])
+                        ->select('tblViolationFee.*')
+                        ->first();
+                    
+                    $violation->strViolationCode = $request->strViolationCode;
+                    $violation->strViolationDescription = $request->strViolationDescription;    
+                    $violation->save();
 
-                $request->dblPrice = (double) $request->dblPrice;
-                if ($request->dblPrice != $violationFee->dblPrice){
-                    DB::table('tblViolationFee')->insert([
-                        'dblPrice' => $request->dblPrice,
-                        'intViolationID' => $id
-                    ]);
-
-                    DB::table('tblViolationFee')
-                        ->where('intViolationFeeID', $violationFee->intViolationFeeID)
-                        ->update([
-                            'datEndDate' => $now
+                    $request->dblPrice = (double) $request->dblPrice;
+                    if ($request->dblPrice != $violationFee->dblPrice){
+                        DB::table('tblViolationFee')->insert([
+                            'dblPrice' => $request->dblPrice,
+                            'intViolationID' => $id
                         ]);
+
+                        DB::table('tblViolationFee')
+                            ->where('intViolationFeeID', $violationFee->intViolationFeeID)
+                            ->update([
+                                'datEndDate' => $now
+                            ]);
+                    }
+                    DB::commit();
+                    return response()->json(
+                        [
+                            'message' => 'Violation Updated.',
+                            'status code' => 200
+                        ]
+                    );
+                } catch (Exception $e) {
+                    DB::rollback();
+                    return response()->json(
+                        [
+                            'message' => $e->getMessage(),
+                            'status code' => 400
+                        ]
+                    );
                 }
-                DB::commit();
+                    
+            }else{
                 return response()->json(
                     [
-                        'message' => 'Violation Updated.',
-                        'status code' => 200
-                    ]
-                );
-            } catch (Exception $e) {
-                DB::rollback();
-                return response()->json(
-                    [
-                        'message' => $e->getMessage(),
+                        'message' => 'Violation not Found. Update Failed.',
                         'status code' => 400
                     ]
                 );
             }
-                
-        }else{
-            return response()->json(
-                [
-                    'message' => 'Violation not Found. Update Failed.',
-                    'status code' => 400
-                ]
-            );
+        } else{
+            return response()->json([
+                'message' => 'Unauthorized.',
+                'status Code' => 401
+            ]);
         }
             
-
-
     }
 
     /**

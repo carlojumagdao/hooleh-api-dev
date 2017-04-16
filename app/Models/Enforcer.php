@@ -8,5 +8,9 @@ class Enforcer extends Model
 {
 	public $timestamps = false;
 	protected $table = 'tblEnforcer';
-	public $primaryKey = 'intEnforcerID';
+	protected $primaryKey = 'intEnforcerID';
+
+	public function User(){
+		return $this->belongsTo('\App\User');
+	}
 }
