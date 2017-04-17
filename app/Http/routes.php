@@ -34,10 +34,16 @@ Route::group(['middleware' => ['jwt.auth', 'cors'], 'prefix' => 'api/v1', 'names
 	Route::resource('drivers', 'DriverController');	
 	Route::resource('violations', 'ViolationController');
 	Route::resource('driverviolations', 'DriverViolationController');
+	
+	Route::post('enforcertickets', 'EnforcerTicketController@store');
+	Route::get('enforcertickets', 'api\v1\EnforcerTicketController@enforcerTicket');
+	Route::get('enforcers/{enforcer_id}/tickets', 'EnforcerTicketController@index');
 
 	Route::get('enforcercurrentlogin', 'EnforcerController@enforcerCurrentLogin');
 	Route::get('listviolationtoday', 'DriverViolationController@enforcerListViolationToday');
 	Route::get('violationdetails/{id}', 'DriverViolationController@ticketDetails');
 });
+
+
 
 	
