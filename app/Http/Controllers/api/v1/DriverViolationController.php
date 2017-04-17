@@ -43,9 +43,7 @@ class DriverViolationController extends Controller
     {
         try {
             DB::beginTransaction();
-
             $user = JWTAuth::parseToken()->toUser();
-
             $driverID = DB::table('tblDriver')
                 ->select('intDriverID')
                 ->where('strDriverLicense', $request->strDriverLicenseNumber)
@@ -62,11 +60,12 @@ class DriverViolationController extends Controller
                 'dblLongitude' => $request->dblLongitude
             ]);
 
-            $violations = $request->violations;
+            $violations = json_decode($request->violations);
+            
             foreach ($violations as $value) {
                 DB::table('tblViolationTransactionDetail')->insert([
                     'intViolationTransactionHeaderID' => $id,
-                    'intViolationID' => $value
+                    'intViolationID' => $value->intViolationID
                 ]);
             }
 
