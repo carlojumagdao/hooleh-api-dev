@@ -17,39 +17,73 @@
 
     <!-- Main content -->
     <section class="content">
-        <!-- Small boxes (Stat box) -->
         <div class="row">
-            <div class="col-lg-6 col-xs-6">
-            <!-- small box -->
-                <div class="small-box bg-aqua">
-                    <div class="inner">
-                        <h3>150</h3>
-
-                        <p>Number of Enforcers</p>
+            <a href="{{ URL::to('/enforcer') }}">
+                <div class="col-sm-6 col-md-3 col-lg-2">
+                    <div class="custom-box">
+                        <div class="box-body box-profile">
+                            <img class="profile-user-img img-responsive img-circle" src="assets/image/icons/userIcon.png" alt="User profile picture">
+                            <h3 class="profile-username text-center">Enforcers</h3>
+                            <p class="text-muted text-center">Add and manage enforcers</p>
+                        </div>
                     </div>
-                    <div class="icon">
-                        <i class="ion ion-user"></i>
+                </div>
+            </a>
+            <a href="/">
+            <div class="col-sm-6 col-md-3 col-lg-2">
+                <div class="custom-box">
+                    <div class="box-body box-profile">
+                        <img class="profile-user-img img-responsive img-circle" src="assets/image/icons/driverIcon.png" alt="User profile picture">
+                        <h3 class="profile-username text-center">Drivers</h3>
+                        <p class="text-muted text-center">Track drivers</p>
                     </div>
-                    <a href="{{ URL::to('/enforcer') }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            <!-- ./col -->
-            
-            <div class="col-lg-6 col-xs-6">
-                <!-- small box -->
-                <div class="small-box bg-red">
-                    <div class="inner">
-                        <h3>65</h3>
-
-                        <p>Number of Violators</p>
+            </a>
+            <a href="/violation">
+            <div class="col-sm-6 col-md-3 col-lg-2">
+                <div class="custom-box">
+                    <div class="box-body box-profile">
+                        <img class="profile-user-img img-responsive img-circle" src="assets/image/icons/violationIcon.png" alt="User profile picture">
+                        <h3 class="profile-username text-center">Violations</h3>
+                        <p class="text-muted text-center">Add and manage violations</p>
                     </div>
-                    <div class="icon">
-                        <i class="ion ion-pie-graph"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            <!-- ./col -->
+            </a>
+            <a href="/">
+            <div class="col-sm-6 col-md-3 col-lg-2">
+                <div class="custom-box">
+                    <div class="box-body box-profile">
+                        <img class="profile-user-img img-responsive img-circle" src="assets/image/icons/adminIcon.png" alt="User profile picture">
+                        <h3 class="profile-username text-center">Admin Role</h3>
+                        <p class="text-muted text-center">Add new admins</p>
+                    </div>
+                </div>
+            </div>
+            </a>
+            <a href="/">
+            <div class="col-sm-6 col-md-3 col-lg-2">
+                <div class="custom-box">
+                    <div class="box-body box-profile">
+                        <img class="profile-user-img img-responsive img-circle" src="assets/image/icons/reportIcon.png" alt="User profile picture">
+                        <h3 class="profile-username text-center">Reports</h3>
+                          <p class="text-muted text-center">Track usage of service</p>
+                    </div>
+                </div>
+            </div>
+            </a>
+            <a href="/">
+            <div class="col-sm-6 col-md-3 col-lg-2">
+                <div class="custom-box">
+                    <div class="box-body box-profile">
+                        <img class="profile-user-img img-responsive img-circle" src="assets/image/icons/supportIcon.png" alt="User profile picture">
+                        <h3 class="profile-username text-center">Support</h3>
+                        <p class="text-muted text-center">Talk with our support team</p>
+                    </div>
+                </div>
+            </div>
+            </a>
         </div>
     </section>
 @endsection

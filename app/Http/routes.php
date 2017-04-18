@@ -23,9 +23,53 @@ Route::get('/violation', function () {
     return view('violation');
 });
 
-Route::get('/enforcer', function () {
-    return view('enforcer');
-});
+Route::get('/violation', array(
+	'uses' => 'web\violationController@index',
+	'as' => 'violation.index'
+));
+
+
+
+//----------Enforcer----------//
+Route::get('/enforcer', array(
+	'uses' => 'web\enforcerController@index',
+	'as' => 'enforcer.index'
+));
+Route::post('/enforcer/create', array(
+	'uses' => 'web\enforcerController@create',
+	'as' => 'enforcer.create'
+));
+Route::post('/enforcer/update', array(
+	'uses' => 'web\enforcerController@update',
+	'as' => 'enforcer.update'
+));
+Route::post('/enforcer/resetpassword', array(
+	'uses' => 'web\enforcerController@resetpassword',
+	'as' => 'enforcer.resetpassword'
+));
+Route::post('/enforcer/filter', array(
+	'uses' => 'web\enforcerController@filter',
+	'as' => 'enforcer.filter'
+));
+Route::post('/enforcer/suspend', array(
+	'uses' => 'web\enforcerController@suspend',
+	'as' => 'enforcer.suspend'
+));
+Route::post('/enforcer/restore', array(
+	'uses' => 'web\enforcerController@restore',
+	'as' => 'enforcer.restore'
+));
+Route::get('/enforcer/show/{id}', array(
+	'uses' => 'web\enforcerController@show',
+	'as' => 'enforcer.show'
+));
+Route::get('/enforcer/data', array(
+	'uses' => 'web\enforcerController@getEnforcerData',
+	'as' => 'enforcer.data'
+));
+//----------Enforcer----------//
+
+//----------API----------//
 
 Route::get('/driver/{id}', function () {
     return view('enforcer');
@@ -49,6 +93,10 @@ Route::group(['middleware' => ['jwt.auth', 'cors'], 'prefix' => 'api/v1', 'names
 	Route::get('violationdetails/{id}', 'DriverViolationController@ticketDetails');
 });
 
+<<<<<<< HEAD
 // Route::resource('api/v1/driverviolations', 'api\v1\DriverViolationController');
 
 	
+=======
+	
+>>>>>>> master
