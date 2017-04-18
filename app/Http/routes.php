@@ -69,7 +69,6 @@ Route::get('/enforcer/data', array(
 ));
 //----------Enforcer----------//
 
-<<<<<<< HEAD
 
 //----------Violation--------//
 Route::get('/violation', array(
@@ -116,17 +115,13 @@ Route::post('/violation/filter', array(
 //----------Violation--------//
 
 
-
-//----------API----------//
-=======
 //----------API----------//
 
 Route::get('/driver/{id}', function () {
     return view('enforcer');
 });
->>>>>>> auth
 
-
+//----------API----------//
 Route::post('api/authenticate', 'Auth\AuthController@authenticate');
 
 Route::group(['middleware' => ['jwt.auth', 'cors'], 'prefix' => 'api/v1', 'namespace' => 'api\v1'], function () {
@@ -144,14 +139,6 @@ Route::group(['middleware' => ['jwt.auth', 'cors'], 'prefix' => 'api/v1', 'names
 	Route::get('violationdetails/{id}', 'DriverViolationController@ticketDetails');
 });
 
-<<<<<<< HEAD
-	
-=======
-<<<<<<< HEAD
 // Route::resource('api/v1/driverviolations', 'api\v1\DriverViolationController');
+//----------API----------//
 
-	
-=======
-	
->>>>>>> master
->>>>>>> auth
