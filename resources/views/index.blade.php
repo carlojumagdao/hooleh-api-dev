@@ -6,6 +6,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+        <link rel="icon" href="{{ URL::asset('assets/image/icons/Hooleh.png') }}" />
+
         <!-- Bootstrap 3.3.6 -->
         <link rel="stylesheet" href="{{ URL::asset('assets/bootstrap/css/bootstrap.min.css') }}">
         <!-- Font Awesome -->
@@ -27,13 +30,13 @@
 
     </head>
 
-    <body class="hold-transition skin-blue sidebar-collapse sidebar-mini">
+    <body class="hold-transition skin-green sidebar-collapse sidebar-mini">
         <div class="wrapper">
             <header class="main-header">
                 <!-- Logo -->
                 <a href="index.php" class="logo">
                     <!-- mini logo for sidebar mini 50x50 pixels -->
-                    <span class="logo-mini"><b>H</b></span>
+                    <span class="logo-mini"><img src="{{ URL::asset('assets/image/icons/Hooleh.png') }}" class="img-responsive"/></span>
                     <!-- logo for regular state and mobile devices -->
                     <span class="logo-lg"><b>Hooleh</b></span>
                 </a>
@@ -53,7 +56,7 @@
                     <!-- Sidebar user panel -->
                     <div class="user-panel">
                         <div class="pull-left image">
-                            <img src="assets/dist/img/avatar.png" class="img-circle" alt="User Image">
+                            <img src="{{ URL::asset('assets/dist/img/avatar.png') }}" class="img-circle" alt="User Image">
                         </div>
                         <div class="pull-left info">
                             <p>User Name</p>
@@ -84,19 +87,7 @@
                                 <li><a href="{{ URL::to('/enforcer') }}"><i class="fa fa-circle-o"></i> Enforcer</a></li>
                             </ul>
                         </li>
-                        <li class="treeview">
-                            <a href="#">
-                                <i class="fa fa-chart"></i>
-                                <span>Reports</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="?menu=violation_transaction"><i class="fa fa-circle-o"></i> Violation Reports</a></li>
-                                
-                            </ul>
-                        </li>
+                        
                     </ul>
                 </section>
                 <!-- /.sidebar -->
@@ -135,11 +126,7 @@
         <script src="{{ URL::asset('assets/bootstrap/js/validator.min.js') }}"></script>
         <!-- page script -->
         <script src="{{ URL::asset('assets/bootstrap/js/bootbox.min.js') }}"></script>
-        <script>
-            $(function () {
-                $("#dtblViolation").DataTable();
-            });
-        </script>
+        
         @yield('script')
 
     </body>

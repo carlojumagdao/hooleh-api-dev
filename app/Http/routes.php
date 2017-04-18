@@ -69,6 +69,53 @@ Route::get('/enforcer/data', array(
 ));
 //----------Enforcer----------//
 
+
+//----------Violation--------//
+Route::get('/violation', array(
+	'uses' => 'web\violationController@index',
+	'as' => 'violation.index'
+));
+
+
+Route::post('/violation/create', array(
+	'uses' => 'web\violationController@create',
+	'as' => 'violation.create'
+));
+
+Route::post('/violation/update', array(
+	'uses' => 'web\violationController@update',
+	'as' => 'violation.update'
+));
+
+Route::get('/violation/data', array(
+	'uses' => 'web\violationController@getViolationData',
+	'as' => 'violation.data'
+));
+
+Route::get('/violation/show/{id}', array(
+	'uses' => 'web\violationController@show',
+	'as' => 'violation.show'
+));
+
+Route::post('/violation/delete', array(
+	'uses' => 'web\violationController@delete',
+	'as' => 'violation.delete'
+));
+
+Route::post('/violation/restore', array(
+	'uses' => 'web\violationController@restore',
+	'as' => 'violation.restore'
+));
+
+Route::post('/violation/filter', array(
+	'uses' => 'web\violationController@filter',
+	'as' => 'violation.filter'
+));
+
+//----------Violation--------//
+
+
+
 //----------API----------//
 
 Route::post('api/authenticate', 'Auth\AuthController@authenticate');
