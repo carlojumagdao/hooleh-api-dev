@@ -23,6 +23,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">Filters</h3>
                     </div>
+<<<<<<< HEAD
                     <div class="box-body">
                         <div class="form-group">
                             <select class="form-control selFilter">
@@ -36,15 +37,30 @@
             </div>
             <div class="loading">Loading&#8230;</div>
             <div class="col-md-9" id="violationTable">
+=======
+                    <div class="box-body box-profile">
+                    <button class="btn btn-primary btn-block" data-toggle="modal" title="Edit">Add new</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+>>>>>>> auth
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">Violation</h3>
                     </div>
                     <div class="box-body">
+<<<<<<< HEAD
                         <table id="dtblViolation" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th class="hide"></th>
+=======
+                        <table id="dtblEnforcer" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+>>>>>>> auth
                                     <th>Code</th>
                                     <th>Description</th>
                                     <th>Fine</th>
@@ -54,6 +70,7 @@
                             <tbody>
                                 @foreach($violations as $violation)
                                     <tr>
+<<<<<<< HEAD
                                         <td class="hide classViolationPrimaryKey">{{$violation->intViolationID}}</td>
                                         <td class="classCode clickable-row" style="cursor: pointer" data-href="violation/show/{{$violation->intViolationID}}">
                                             {{$violation->strViolationCode}}
@@ -62,19 +79,39 @@
                                             {{$violation->strViolationDescription}}
                                         </td>
                                         <td class="classFine">
+=======
+                                        <td class="code">
+                                            {{$violation->strViolationCode}}
+                                        </td>
+                                        <td class="Description">
+                                            {{$violation->strViolationDescription}}
+                                        </td>
+                                        <td>
+>>>>>>> auth
                                             P {{number_format($violation->dblPrice,2)}}
                                         </td>
                                         <td>
                                             <div class="btn-group">
+<<<<<<< HEAD
                                             <button type="button" class="btn btn-sm btn-default btnUpdateViolation" data-toggle="tooltip" title="Update">
                                                     <i class="fa fa-fw fa-pencil"></i>
+=======
+                                            <button type="button" class="btn btn-sm btn-default" data-toggle="tooltip" title="View Info">
+                                                <i class="fa fa-fw fa-info"></i>
+>>>>>>> auth
                                             </button>
                                             <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
                                                 <span class="caret"></span>
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
+<<<<<<< HEAD
                                                 <li><a href="#" class="btnDeleteViolation">Delete Violation</a></li>
+=======
+                                                <li><a href="#">Edit Violation</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="#">Delete Violation</a></li>
+>>>>>>> auth
                                             </ul>
                                             </div>
                                         </td>
@@ -91,14 +128,18 @@
                             </tfoot>
                         </table>
                     </div>
+<<<<<<< HEAD
                     <div id="loadingViolation">
                         <i id="loadingViolationDesign"></i>
                     </div>
+=======
+>>>>>>> auth
                 </div>
             </div>
         </div>
     </section>
 
+<<<<<<< HEAD
     
     <!-- MODAL ADD VIOLATION -->
         <div class="modal fade" id="modalAddViolation" role="dialog">
@@ -279,11 +320,16 @@
 
         <!-- MODAL SUCCESSFUL RESTORE VIOLATION -->
         <div class="modal fade" id="modalRestoredViolationSuccess" role="dialog">
+=======
+    <div class="example-modal">
+        <div class="modal">
+>>>>>>> auth
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
+<<<<<<< HEAD
                         <h4 class="modal-title">Restore violation</h4>
                     </div>
                     <div class="modal-body">
@@ -300,13 +346,35 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
                         <button type="button" id="btnPrint" class="btn btn-primary">PRINT</button>
+=======
+                        <h4 class="modal-title">Default Modal</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>One fine body&hellip;</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+>>>>>>> auth
                     </div>
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
         <!-- MODAL SUCCESSFUL RESTORE VIOLATION -->
 @stop
 
 @section('script')
     <script src="{{ URL::asset('assets/js/violationIndex.js') }}"></script>
 @stop
+=======
+    </div>
+@endsection
+@section('script')
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip(); 
+        });
+    </script>
+@endsection
+>>>>>>> auth

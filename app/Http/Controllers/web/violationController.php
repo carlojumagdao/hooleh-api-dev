@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Models\Violation;
+<<<<<<< HEAD
 use App\Models\ViolationFee;
+=======
+>>>>>>> auth
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use DB;
@@ -20,10 +23,15 @@ class violationController extends Controller
         $violations = DB::table('tblViolation')
             ->join('tblViolationFee', 'tblViolation.intViolationID', '=', 'tblViolationFee.intViolationID')
             ->where([
+<<<<<<< HEAD
                 ['tblViolation.blViolationDelete', 0],
                 ['tblViolationFee.datStartDate', '<=', $now],
                 ['tblViolationFee.datEndDate', '>=', $now]
                 
+=======
+                ['tblViolationFee.datStartDate', '<=', $now],
+                ['tblViolationFee.datEndDate', '>=', $now]
+>>>>>>> auth
             ])
             ->select('tblViolation.*', 'tblViolationFee.dblPrice')
             ->orderBy('tblViolation.strViolationDescription', 'asc')
@@ -31,6 +39,7 @@ class violationController extends Controller
 
         return view('violation.index', ['violations' => $violations]);
     }
+<<<<<<< HEAD
 
     public function show($id)
     {
@@ -173,4 +182,6 @@ class violationController extends Controller
         }
     }
 
+=======
+>>>>>>> auth
 }

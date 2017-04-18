@@ -30,7 +30,11 @@
 
     </head>
 
+<<<<<<< HEAD
     <body class="hold-transition skin-green sidebar-collapse sidebar-mini">
+=======
+    <body class="hold-transition skin-blue sidebar-collapse sidebar-mini">
+>>>>>>> auth
         <div class="wrapper">
             <header class="main-header">
                 <!-- Logo -->
@@ -126,7 +130,15 @@
         <script src="{{ URL::asset('assets/bootstrap/js/validator.min.js') }}"></script>
         <!-- page script -->
         <script src="{{ URL::asset('assets/bootstrap/js/bootbox.min.js') }}"></script>
+<<<<<<< HEAD
         
+=======
+        <script>
+            $(function () {
+                $("#dtblViolation").DataTable();
+            });
+        </script>
+>>>>>>> auth
         @yield('script')
 
     </body>

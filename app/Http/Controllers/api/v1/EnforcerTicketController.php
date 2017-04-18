@@ -6,21 +6,30 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use DB;
 use App\Models\Driver;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Carbon\Carbon;
+use App\Models\Ticket;
 
-class DriverViolationController extends Controller
+use Carbon\Carbon;
+use DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
+
+class EnforcerTicketController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        
+        $enforcerTickets = DB::table('tblViolationTransactionHeader')
+            ->join('tblDriver', 'tblDriver.intDriverID', '=', 'tblViolationTransactionHeader.intDriverID')
+            ->join('tblVehicleType', 'tblVehicleType.intVehicleTypeID', '=', 'tblViolationTransactionHeader.intVehicleTypeID')
+            ->select('tblDriver.*', 'tblVehicleType.strVehicleDescription', 'tblViolationTransactionHeader.*')
+            ->where('intEnforcerID', $id)
+            ->get();
+
+        return response()->json($enforcerTickets);
     }
 
     /**
@@ -43,6 +52,7 @@ class DriverViolationController extends Controller
     {
         try {
             DB::beginTransaction();
+
             $user = JWTAuth::parseToken()->toUser();
             $driverID = DB::table('tblDriver')
                 ->select('intDriverID')
@@ -60,12 +70,11 @@ class DriverViolationController extends Controller
                 'dblLongitude' => $request->dblLongitude
             ]);
 
-            $violations = json_decode($request->violations);
-            
+            $violations = $request->violations;
             foreach ($violations as $value) {
                 DB::table('tblViolationTransactionDetail')->insert([
                     'intViolationTransactionHeaderID' => $id,
-                    'intViolationID' => $value->intViolationID
+                    'intViolationID' => $value
                 ]);
             }
 
@@ -125,39 +134,7 @@ class DriverViolationController extends Controller
         //
     }
 
-    public function enforcerListViolationToday(){
-        $user = JWTAuth::parseToken()->toUser();
-        $now = Carbon::now()->addHours(8);
-        $now->hour = 0;
-        $now->minute = 0;
-        $now->second = 0;
-
-        $listViolationToday = DB::table('tblViolationTransactionHeader')
-            ->join('tblDriver', 'tblDriver.intDriverID', '=', 'tblViolationTransactionHeader.intDriverID')
-            ->select('tblDriver.*', 'tblViolationTransactionHeader.*')
-            ->where('tblViolationTransactionHeader.TimestampCreated', '>=', $now)
-            ->get();
-
-        return response()->json($listViolationToday);
-    }
-
-    public function ticketDetails($id){
-
-        $dateViolation = DB::table('tblViolationTransactionHeader')
-            ->select('TimestampCreated')
-            ->where('strControlNumber', $id)
-            ->first();
-
-        $ticketDetails = DB::table('tblViolationTransactionHeader')
-            ->join('tblViolationTransactionDetail','tblViolationTransactionDetail.intViolationTransactionHeaderID', '=', 'tblViolationTransactionHeader.intViolationTransactionHeaderID')
-            ->join('tblViolation', 'tblViolation.intViolationID', '=', 'tblViolationTransactionDetail.intViolationID')
-            ->join('tblViolationFee', 'tblViolationFee.intViolationID', '=', 'tblViolation.intViolationID')
-            ->select('tblViolation.*', 'tblViolationFee.dblPrice')
-            ->where('tblViolationTransactionHeader.strControlNumber', $id)
-            ->where('tblViolationFee.datStartDate', '<=', $dateViolation->TimestampCreated)
-            ->where('tblViolationFee.datEndDate', '>=', $dateViolation->TimestampCreated)
-            ->get();
-
-        return response()->json($ticketDetails);
+    public function enforcerTicket(Request $request){
+        
     }
 }

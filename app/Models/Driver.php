@@ -14,4 +14,8 @@ class Driver extends Model
 		return $this->hasOne('App\Models\LicenseType', 'intLicenseId', 'intLicenseType');
 	}
 
+	public function Ticket(){
+		return $this->belongsTo('App\Models\Ticket', 'intDriverID', 'intDriverID');
+	}
+
 }
